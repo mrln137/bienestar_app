@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal de servicios de Bienestar Universitario — Universidad de Pamplona">
+    <title>Bienestar Universitario | Universidad de Pamplona</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Cabecera: grande al inicio; fija y compacta al hacer scroll -->
+    <div id="cabecera-sitio" class="cabecera-sitio">
+    <header class="navbar-principal">
+        <div class="navbar-logos">
+            <img
+                src="{{ url_for('static', filename='img/logo-bienestar.png') }}"
+                alt="Logo Bienestar Universitario"
+                class="logo-bienestar"
+            >
+            <img
+                src="{{ url_for('static', filename='img/logo-pamplona.png') }}"
+                alt="Escudo Universidad de Pamplona"
+                class="logo-pamplona"
+            >
+            <div class="navbar-marca-texto">
+                <span class="marca-bienestar">BIENESTAR UNIVERSITARIO</span>
+                <span class="marca-up">Universidad de Pamplona</span>
+            </div>
+        </div>
+
+        <div class="navbar-acciones">
+            <button type="button" class="btn-notificaciones" aria-label="Notificaciones">
+                <svg class="icon-bell" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3a5 5 0 00-5 5v2.5L5 13v1h14v-1l-2-2.5V8a5 5 0 00-5-5zm0 18a2.5 2.5 0 002.5-2.5h-5A2.5 2.5 0 0012 21z" fill="currentColor"/>
+                </svg>
+                <span class="notif-badge" aria-hidden="true"></span>
+            </button>
+
+            <div class="perfil-dropdown" id="perfil-dropdown">
+                <button
+                    type="button"
+                    class="perfil-trigger"
+                    id="perfil-trigger"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="perfil-menu"
+                >
+                    <span class="perfil-avatar" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5C21 16.5 17 14 12 14z" fill="currentColor"/></svg>
+                    </span>
+                    <span class="perfil-nombre" id="nombre-usuario">Juan Pérez</span>
+                    <svg class="icon-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7 10l5 5 5-5H7z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <ul class="perfil-menu" id="perfil-menu" role="menu" hidden>
+                    <li role="none"><a href="#perfil" role="menuitem">Mi perfil</a></li>
+                    <li role="none"><a href="#citas" role="menuitem">Mis citas</a></li>
+                    <li role="none"><a href="#" role="menuitem">Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menú de navegación secundario -->
+    <nav class="nav-secundario" aria-label="Servicios de bienestar">
+        <ul class="nav-secundario-lista">
+            <li><a href="#inicio" class="nav-link" data-nav="inicio">Inicio</a></li>
+            <li><a href="#salud" class="nav-link" data-nav="salud">Salud</a></li>
+            <li><a href="#deporte" class="nav-link" data-nav="deporte">Deporte</a></li>
+            <li><a href="#cultura" class="nav-link" data-nav="cultura">Cultura</a></li>
+            <li><a href="#transporte" class="nav-link" data-nav="transporte">Transporte</a></li>
+            <li><a href="#alimentacion" class="nav-link nav-link--activo" data-nav="alimentacion">Alimentación</a></li>
+            <li><a href="#perfil" class="nav-link" data-nav="perfil">Perfil</a></li>
+            <li><a href="#contacto" class="nav-link" data-nav="ayuda">Ayuda</a></li>
+        </ul>
+    </nav>
+    </div>
+    <div id="cabecera-spacer" class="cabecera-spacer" aria-hidden="true"></div>
+
+    <!-- Contenido principal -->
+    <main class="panel-principal" id="inicio">
+        <header class="panel-encabezado">
+            <p class="panel-subtitulo">
+                Panel de Servicios — <span id="nombre-panel">Juan Pérez</span>
+            </p>
+            <h1 class="panel-titulo">¡Bienvenido a tu portal de bienestar!</h1>
+            <p class="panel-fecha" id="fecha-actual" aria-live="polite"></p>
+        </header>
+
+        <!-- Grid de 6 tarjetas de servicio -->
+        <section class="servicios-grid" aria-label="Servicios disponibles">
+            <!-- SALUD -->
+            <article class="tarjeta-servicio" id="salud" data-servicio="salud">
+                <div class="tarjeta-icono" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><path d="M24 8l-2 6h-7l5.5 4-2 6.5L24 22l5.5 2.5-2-6.5L33 14h-7l-2-6zm-4 20c-6 0-10 3-10 7v3h28v-3c0-4-4-7-10-7h-8z" fill="currentColor"/><path d="M22 30h4v10h-4z" fill="currentColor"/></svg>
+                </div>
+                <h2 class="tarjeta-titulo">Salud</h2>
+                <p class="tarjeta-descripcion">Citas médicas, atención odontológica, psicología.</p>
+                <button type="button" class="btn-tarjeta" data-prompt="Necesito agendar una cita de salud">Acceder</button>
+            </article>
+
+            <!-- DEPORTE -->
+            <article class="tarjeta-servicio" id="deporte" data-servicio="deporte">
+                <div class="tarjeta-icono" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><circle cx="18" cy="12" r="5" fill="currentColor"/><path d="M10 22l8 4 14-8 6 14-12 6-4-10-6 4-6-10z" fill="currentColor"/></svg>
+                </div>
+                <h2 class="tarjeta-titulo">Deporte</h2>
+                <p class="tarjeta-descripcion">Inscripción a equipos, gimnasio, actividades recreativas.</p>
+                <button type="button" class="btn-tarjeta" data-prompt="Información sobre programas de deporte">Ver Programas</button>
+            </article>
+
+            <!-- CULTURA -->
+            <article class="tarjeta-servicio" id="cultura" data-servicio="cultura">
+                <div class="tarjeta-icono" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><path d="M8 32c4-8 8-12 16-12s12 4 16 12H8z" fill="currentColor"/><circle cx="16" cy="18" r="6" fill="currentColor"/><circle cx="32" cy="18" r="6" fill="currentColor"/></svg>
+                </div>
+                <h2 class="tarjeta-titulo">Cultura</h2>
+                <p class="tarjeta-descripcion">Talleres de arte, danza, eventos culturales, biblioteca.</p>
+                <button type="button" class="btn-tarjeta" data-prompt="Quiero participar en actividades culturales">Participar</button>
+            </article>
+
+            <!-- TRANSPORTE -->
+            <article class="tarjeta-servicio" id="transporte" data-servicio="transporte">
+                <div class="tarjeta-icono" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="18" rx="3" fill="currentColor"/><rect x="10" y="20" width="8" height="6" rx="1" fill="#fff"/><circle cx="14" cy="38" r="4" fill="currentColor"/><circle cx="34" cy="38" r="4" fill="currentColor"/></svg>
+                </div>
+                <h2 class="tarjeta-titulo">Transporte</h2>
+                <p class="tarjeta-descripcion">Rutas universitarias, horarios, solicitud de permisos.</p>
+                <button type="button" class="btn-tarjeta" data-prompt="Consultar rutas de transporte universitario">Consultar Rutas</button>
+            </article>
+
+            <!-- ALIMENTACIÓN (destacada) -->
+            <article class="tarjeta-servicio tarjeta-servicio--destacada" id="alimentacion" data-servicio="alimentacion">
+                <div class="tarjeta-icono" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><path d="M14 8v20c0 3-2 5-4 5s-4-2-4-5V8h4zm16 0v28h-4V8h4z" fill="currentColor"/></svg>
+                </div>
+                <h2 class="tarjeta-titulo">Alimentación</h2>
+                <p class="tarjeta-descripcion">Comedores universitarios, solicitudes de becas de almuerzo.</p>
+                <button type="button" class="btn-tarjeta btn-tarjeta--dorado" data-prompt="Inscripciones abiertas en alimentación">
+                    Inscripciones Abiertas
+                </button>
+            </article>
+
+            <!-- PERFIL -->
+            <article class="tarjeta-servicio" id="perfil-card" data-servicio="perfil">
+                <div class="tarjeta-icono" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><circle cx="24" cy="16" r="8" fill="currentColor"/><path d="M8 42c0-10 7-16 16-16s16 6 16 16H8z" fill="currentColor"/></svg>
+                </div>
+                <h2 class="tarjeta-titulo">Perfil</h2>
+                <p class="tarjeta-descripcion">Actualizar datos, descargar certificados, mis solicitudes.</p>
+                <button type="button" class="btn-tarjeta" data-prompt="Gestionar mi perfil de bienestar">Gestionar</button>
+            </article>
+        </section>
+
+        <!-- Sección auxiliar: citas (integración backend) -->
+        <section id="citas" class="seccion-citas" aria-labelledby="citas-titulo" hidden>
+            <header class="seccion-citas-header">
+                <h2 id="citas-titulo">Mis citas programadas</h2>
+                <button type="button" id="btn-refrescar-citas" class="btn-tarjeta btn-tarjeta--compacto">
+                    Actualizar
+                </button>
+            </header>
+            <ul id="lista-citas" class="lista-citas" aria-live="polite"></ul>
+        </section>
+    </main>
+
+    <!-- Chatbot flotante IA -->
+    <aside class="chatbot-flotante" id="chatbot" aria-label="Asistente de IA de Bienestar">
+        <button
+            type="button"
+            class="chat-fab"
+            id="chat-fab"
+            aria-label="Abrir asistente de IA"
+            aria-expanded="false"
+            aria-controls="chat-ventana"
+        >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="currentColor"/>
+            </svg>
+        </button>
+
+        <div class="chat-ventana" id="chat-ventana" hidden>
+            <header class="chat-ventana-header">
+                <div class="chat-ventana-marca">
+                    <img
+                        src="{{ url_for('static', filename='img/logo-bienestar.png') }}"
+                        alt=""
+                        width="28"
+                        height="28"
+                        aria-hidden="true"
+                    >
+                    <span>Bienestar</span>  
+                </div>
+                <div class="chat-ventana-controles">
+                    <button type="button" class="chat-btn-control" id="chat-minimizar" aria-label="Minimizar chat" title="Minimizar">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14v2H5z" fill="currentColor"/></svg>
+                    </button>
+                    <button type="button" class="chat-btn-control" id="chat-cerrar" aria-label="Cerrar chat" title="Cerrar">
+                        <svg viewBox="0 0 24 24"><path d="M19 6.4L17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z" fill="currentColor"/></svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="chat-cuerpo" id="chat-cuerpo">
+                <div id="chat-mensajes" class="chat-mensajes" role="log" aria-live="polite" aria-relevant="additions">
+                    <div class="mensaje mensaje--asistente">
+                        <p>
+                            ¡Hola <strong id="saludo-chat">Juan</strong>! Soy el Asistente de IA de Bienestar.
+                            ¿Cómo te sientes hoy? Estoy aquí para un triaje médico rápido.
+                            (Ej. &quot;Tengo fiebre&quot;, &quot;Me duele la cabeza&quot;)
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <form class="chat-formulario" id="chat-formulario" aria-label="Enviar mensaje al asistente">
+                <label for="chat-input" class="sr-only">Escribe tus síntomas</label>
+                <input
+                    type="text"
+                    id="chat-input"
+                    name="mensaje"
+                    placeholder="Escribe tus síntomas aquí..."
+                    autocomplete="off"
+                    required
+                >
+                <button type="submit" class="chat-btn-enviar" id="chat-btn-enviar" aria-label="Enviar mensaje">
+                    Send
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Footer institucional -->
+    <footer class="footer-institucional" id="contacto" aria-label="Información de contacto">
+        <div class="footer-contenedor">
+            <div class="footer-columna footer-columna--contacto">
+                <h2 class="footer-titulo-col">Contacto</h2>
+                <div class="footer-texto">
+                    <p><strong>Sede de Pamplona</strong></p>
+                    <p>Km. 1 Vía Bucaramanga</p>
+                    <p>Tel: (7) 5685303 — 3154871037</p>
+                    <p>Cel Citas Pamplona: <a href="tel:+573164714370">3164714370</a></p>
+                    <p>
+                        <a href="mailto:bienestaruniversitario@unipamplona.edu.co">
+                            bienestaruniversitario@unipamplona.edu.co
+                        </a>
+                    </p>
+                    <p>Facebook: Unipamplona universitaria</p>
+                    <p>
+                        Facebook Live:
+                        <a href="https://www.facebook.com/BienestarLiveUniPamplona" target="_blank" rel="noopener noreferrer">
+                            BienestarLiveUniPamplona
+                        </a>
+                    </p>
+                    <p class="footer-separador"><strong>Sede Villa del Rosario</strong></p>
+                    <p>Autopista Internacional Vía Los Álamos Villa Antigua</p>
+                    <p>Cel Citas Villa del Rosario: <a href="tel:+573153047992">3153047992</a></p>
+                    <p>
+                        <a href="mailto:bienestar-villarosario@unipamplona.edu.co">
+                            bienestar-villarosario@unipamplona.edu.co
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-columna footer-columna--centro">
+                <img
+                    src="{{ url_for('static', filename='img/logo-bienestar.png') }}"
+                    alt="Logo Bienestar Universitario"
+                    class="footer-logo-bienestar"
+                >
+                <nav class="footer-enlaces" aria-label="Enlaces del sitio">
+                    <a href="#sedes">Sedes</a>
+                    <a href="#terminos">Términos de uso</a>
+                    <a href="#mapa">Mapa del sitio</a>
+                </nav>
+            </div>
+
+            <div class="footer-columna footer-columna--escudo">
+                <img
+                    src="{{ url_for('static', filename='img/logo-pamplona.png') }}"
+                    alt="Escudo Universidad de Pamplona"
+                    class="footer-escudo"
+                >
+                <div class="footer-iconos-utilidad" aria-label="Accesos rápidos">
+                    <a href="#" class="footer-icono" title="Sistema SIGA" aria-label="Sistema SIGA">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14a5 5 0 010-10h10v10a5 5 0 01-10 0zm2-8a3 3 0 100 6h6V6H9z" fill="currentColor"/></svg>
+                    </a>
+                    <a href="#" class="footer-icono" title="Inscripciones" aria-label="Inscripciones">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8 13h8v2H8v-2zm0 4h5v2H8v-2z" fill="currentColor"/></svg>
+                    </a>
+                    <a href="tel:+5775685303" class="footer-icono" title="Teléfono" aria-label="Llamar">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.2 1 .4 2.1.7 3.2.9.5.1.8.5.8 1v3.4c0 .6-.4 1-1 1C10.3 21 3 13.7 3 4c0-.6.4-1 1-1h3.4c.5 0 .9.3 1 .8.2 1.1.5 2.2.9 3.2.1.4 0 .9-.3 1.2L6.6 10.8z" fill="currentColor"/></svg>
+                    </a>
+                    <a href="mailto:bienestaruniversitario@unipamplona.edu.co" class="footer-icono" title="Correo" aria-label="Correo electrónico">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <p class="footer-copy">&copy; Universidad de Pamplona — Bienestar Universitario</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

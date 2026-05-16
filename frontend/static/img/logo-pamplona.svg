@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 64" role="img" aria-label="Universidad de Pamplona">
+  <path d="M28 2L4 14v20c0 14 10 26 24 28 14-2 24-14 24-28V14L28 2z" fill="#9A1B24"/>
+  <path d="M28 10l14 7v17c0 9-6 17-14 18-8-1-14-9-14-18V17l14-7z" fill="#B38F43"/>
+  <text x="28" y="38" text-anchor="middle" fill="#fff" font-size="9" font-family="serif" font-weight="bold">UP</text>
+</svg>

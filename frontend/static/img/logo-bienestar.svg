@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="Bienestar Universitario">
+  <circle cx="40" cy="40" r="38" fill="#9A1B24"/>
+  <path d="M40 22c-8 0-14 6-14 14 0 10 14 22 14 22s14-12 14-22c0-8-6-14-14-14z" fill="#fff"/>
+  <circle cx="40" cy="34" r="5" fill="#9A1B24"/>
+</svg>
