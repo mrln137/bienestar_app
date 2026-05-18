@@ -1,6 +1,6 @@
 /**
  * Bienestar Universitario — Frontend
- * UI según prototipo + integración con API Flask
+ * UI según prototipo + integración con API Flask + LangChain + PDF médico
  */
 
 (function () {
@@ -31,6 +31,9 @@
         chatFormulario: document.getElementById("chat-formulario"),
         chatInput: document.getElementById("chat-input"),
         chatBtnEnviar: document.getElementById("chat-btn-enviar"),
+        // PDF — se asignan después del DOMContentLoaded
+        chatBtnPdf: null,
+        chatInputPdf: null,
         btnTarjetas: document.querySelectorAll(".btn-tarjeta[data-prompt]"),
         seccionCitas: document.getElementById("citas"),
         listaCitas: document.getElementById("lista-citas"),
@@ -52,6 +55,7 @@
         initBotonesServicio();
         initMenuCitas();
         cargarCitas();
+        inyectarBotonPdf();  // ← agrega el botón PDF al formulario del chat
     }
 
     function establecerNombres() {
@@ -109,7 +113,7 @@
     }
 
     // =========================================================================
-    // Cabecera: encogimiento gradual y suave según scroll (sin salto a los 80px)
+    // Cabecera: encogimiento gradual y suave según scroll
     // =========================================================================
     function initCabeceraScroll() {
         if (!el.cabeceraSitio) return;
@@ -131,14 +135,8 @@
             const altoCompacto = navbar ? navbar.offsetHeight : 72;
             el.cabeceraSitio.style.setProperty("--progreso", "0");
 
-            el.cabeceraSitio.style.setProperty(
-                "--navbar-alto-expandido",
-                `${altoExpandido}px`
-            );
-            el.cabeceraSitio.style.setProperty(
-                "--navbar-alto-compacto",
-                `${altoCompacto}px`
-            );
+            el.cabeceraSitio.style.setProperty("--navbar-alto-expandido", `${altoExpandido}px`);
+            el.cabeceraSitio.style.setProperty("--navbar-alto-compacto", `${altoCompacto}px`);
 
             if (logos.length) {
                 const logoExp = logos[0].getBoundingClientRect().height;
@@ -285,11 +283,12 @@
     function setEnviando(estado) {
         el.chatInput.disabled = estado;
         el.chatBtnEnviar.disabled = estado;
+        if (el.chatBtnPdf) el.chatBtnPdf.disabled = estado;
     }
 
     async function enviarMensaje(texto) {
         agregarMensaje(texto, "usuario");
-        const cargando = agregarMensaje("Analizando", "asistente cargando");
+        const cargando = agregarMensaje("Analizando...", "asistente cargando");
         cargando.classList.add("mensaje--cargando");
         setEnviando(true);
 
@@ -320,9 +319,11 @@
 
             agregarMensaje(data.respuesta, "asistente");
 
-            if (/agendar|cita|turno|fiebre|dolor/i.test(texto)) {
-                await intentarAgendarCita(texto);
+            // Si el agente agendó una cita, refrescar la lista automáticamente
+            if (/cita agendada|#\d+/i.test(data.respuesta)) {
+                await cargarCitas();
             }
+
         } catch {
             cargando.remove();
             agregarMensaje(
@@ -348,6 +349,95 @@
     }
 
     // =========================================================================
+    // PDF médico — botón inyectado dinámicamente en el formulario del chat
+    // =========================================================================
+    function inyectarBotonPdf() {
+        // Input de archivo oculto
+        const inputPdf = document.createElement("input");
+        inputPdf.type = "file";
+        inputPdf.accept = ".pdf";
+        inputPdf.id = "chat-input-pdf";
+        inputPdf.style.display = "none";
+        document.body.appendChild(inputPdf);
+
+        // Botón visible al lado del input de texto
+        const btnPdf = document.createElement("button");
+        btnPdf.type = "button";
+        btnPdf.id = "chat-btn-pdf";
+        btnPdf.title = "Adjuntar examen médico (PDF)";
+        btnPdf.textContent = "📎";
+        btnPdf.style.cssText =
+            "background:#9a1b24;border:none;cursor:pointer;font-size:1.2rem;padding:0 6px;border-radius:20px";
+
+        // Insertar el botón ANTES del botón de enviar
+        el.chatBtnEnviar.parentNode.insertBefore(btnPdf, el.chatBtnEnviar);
+
+        // Guardar referencias
+        el.chatBtnPdf = btnPdf;
+        el.chatInputPdf = inputPdf;
+
+        // Eventos
+        btnPdf.addEventListener("click", () => inputPdf.click());
+        inputPdf.addEventListener("change", async (e) => {
+            const archivo = e.target.files[0];
+            if (archivo) await subirPdfMedico(archivo);
+            e.target.value = ""; // reset para poder subir el mismo archivo de nuevo
+        });
+    }
+
+    async function subirPdfMedico(archivo) {
+        abrirChat();
+        agregarMensaje(`📄 ${archivo.name}`, "usuario");
+        const cargando = agregarMensaje("Analizando tu PDF médico... un momento ⏳", "asistente cargando");
+        cargando.classList.add("mensaje--cargando");
+        setEnviando(true);
+
+        const formData = new FormData();
+        formData.append("pdf", archivo);
+        formData.append("nombre", NOMBRE_USUARIO);
+        if (usuarioId) formData.append("usuario_id", usuarioId);
+
+        try {
+            const res = await fetch(`${API_BASE}/api/chat/subir-pdf`, {
+                method: "POST",
+                body: formData,
+                // NO poner Content-Type manual — el navegador lo pone con el boundary
+            });
+            const data = await res.json();
+            cargando.remove();
+
+            if (!res.ok) {
+                agregarMensaje(`❌ Error: ${data.error}`, "sistema");
+                return;
+            }
+
+            if (data.usuario_id) {
+                usuarioId = String(data.usuario_id);
+                localStorage.setItem("bienestar_usuario_id", usuarioId);
+            }
+
+            agregarMensaje(data.analisis, "asistente");
+
+            // Si el backend devolvió prioridad sugerida, mostrar un hint
+            if (data.prioridad_sugerida) {
+                const etiquetas = { 1: "Alta 🔴", 2: "Media 🟡", 3: "Baja 🟢" };
+                agregarMensaje(
+                    `Puedo agendar una cita con prioridad ${etiquetas[data.prioridad_sugerida]} basada en tus exámenes. ` +
+                    `Escribe "sí, agendar" para confirmar o dime el motivo si quieres cambiar algo.`,
+                    "sistema"
+                );
+            }
+
+        } catch {
+            cargando.remove();
+            agregarMensaje("❌ No se pudo analizar el PDF. ¿Está el servidor activo?", "sistema");
+        } finally {
+            setEnviando(false);
+            el.chatInput.focus();
+        }
+    }
+
+    // =========================================================================
     // Botones de tarjetas de servicio → abren chat con prompt
     // =========================================================================
     function initBotonesServicio() {
@@ -361,45 +451,12 @@
     }
 
     // =========================================================================
-    // Citas — integración API
+    // Citas — integración API (solo lectura desde el frontend)
+    // El agendamiento ahora lo maneja el agente LangChain en el backend
     // =========================================================================
     function initMenuCitas() {
         if (el.btnRefrescarCitas) {
             el.btnRefrescarCitas.addEventListener("click", cargarCitas);
-        }
-    }
-
-    function calcularPrioridad(motivo) {
-        const t = motivo.toLowerCase();
-        if (/urgente|emergencia|fiebre|crisis|grave|dolor fuerte/.test(t)) return 1;
-        if (/consulta|cita|seguimiento|odontolog|psicológ/.test(t)) return 2;
-        return 3;
-    }
-
-    async function intentarAgendarCita(motivo) {
-        const payload = {
-            motivo,
-            prioridad: calcularPrioridad(motivo),
-            nombre: NOMBRE_USUARIO,
-        };
-        if (usuarioId) payload.usuario_id = parseInt(usuarioId, 10);
-
-        try {
-            const res = await fetch(`${API_BASE}/api/citas/agendar`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
-            const data = await res.json();
-            if (res.ok) {
-                agregarMensaje(
-                    `Cita registrada con prioridad ${data.prioridad_etiqueta || data.cita?.prioridad}.`,
-                    "sistema"
-                );
-                await cargarCitas();
-            }
-        } catch {
-            /* silencioso si backend no disponible */
         }
     }
 
@@ -428,7 +485,9 @@
             const fecha = c.fecha_creacion
                 ? new Date(c.fecha_creacion).toLocaleString("es-CO")
                 : "";
-            li.innerHTML = `<span class="prioridad-badge prioridad-${c.prioridad}">P${c.prioridad} ${etiquetas[c.prioridad]}</span> ${c.motivo} <small>(${c.estado} · ${fecha})</small>`;
+            li.innerHTML =
+                `<span class="prioridad-badge prioridad-${c.prioridad}">P${c.prioridad} ${etiquetas[c.prioridad]}</span> ` +
+                `${c.motivo} <small>(${c.estado} · ${fecha})</small>`;
             el.listaCitas.appendChild(li);
         });
     }
