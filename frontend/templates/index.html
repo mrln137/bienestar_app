@@ -209,30 +209,43 @@
                 <div id="chat-mensajes" class="chat-mensajes" role="log" aria-live="polite" aria-relevant="additions">
                     <div class="mensaje mensaje--asistente">
                         <p>
-                            ¡Hola <strong id="saludo-chat">Juan</strong>! Soy el Asistente de IA de Bienestar.
-                            ¿Cómo te sientes hoy? Estoy aquí para un triaje médico rápido.
-                            (Ej. &quot;Tengo fiebre&quot;, &quot;Me duele la cabeza&quot;)
+                            ¡Hola <strong id="saludo-chat">Juan</strong>! Soy el Asistente de IA de Bienestar Universitario.
+                            ¿Cómo te sientes hoy?¿En qué puedo ayudarte? • Salud • Deporte • Cultura • Alimentación.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <form class="chat-formulario" id="chat-formulario" aria-label="Enviar mensaje al asistente">
-                <label for="chat-input" class="sr-only">Escribe tus síntomas</label>
-                <input
-                    type="text"
-                    id="chat-input"
-                    name="mensaje"
-                    placeholder="Escribe tus síntomas aquí..."
-                    autocomplete="off"
-                    required
-                >
-                <button type="submit" class="chat-btn-enviar" id="chat-btn-enviar" aria-label="Enviar mensaje">
-                    Send
-                </button>
-            </form>
+          <form class="chat-formulario" id="chat-formulario" aria-label="Enviar mensaje al asistente">
+
+    <input type="file" id="input-pdf" accept=".pdf" hidden>
+    <label for="chat-input" class="sr-only">
+        Escribe tus síntomas
+    </label>
+
+    <input
+        type="text"
+        id="chat-input"
+        name="mensaje"
+        placeholder="Escribe tus síntomas aquí..."
+        autocomplete="off"
+        required
+    >
+
+    <button
+        type="submit"
+        class="chat-btn-enviar"
+        id="chat-btn-enviar"
+        aria-label="Enviar mensaje"
+    >
+        Send
+    </button>
+
+</form>
         </div>
     </aside>
+
+
 
     <!-- Footer institucional -->
     <footer class="footer-institucional" id="contacto" aria-label="Información de contacto">
@@ -308,3 +321,4 @@
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
+
